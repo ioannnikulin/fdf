@@ -6,13 +6,11 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/03/24 19:55:06 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/03/29 20:51:42 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_internal.h"
-#include <fcntl.h>
-#include <mlx.h>
 
 static void	video(t_screen *s)
 {
@@ -29,11 +27,20 @@ static void	video(t_screen *s)
 		return ;
 	}
 	mlx_string_put(s->mlx, s->win, 512, 512, 255 + 256 * 255 + 256 * 256 * 255, "Hello world");
+	sleep(2);
 }
 
 static int	parse_map_from_file(int fs, t_screen *s)
 {
+	(void)fs;
+	(void)s;
 	return (1);
+}
+
+static void	finalize(t_screen *s)
+{
+	mlx_destroy_window(s->mlx, s->win);
+	(void)s;
 }
 
 int	main(int argc, char **argv)
