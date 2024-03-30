@@ -23,6 +23,10 @@ preclean:
 	$(PREFIX)cd libft && make clean
 	$(PREFIX)cd minilibx-linux && make clean
 
+prefclean:
+	$(PREFIX)cd libft && make fclean
+	$(PREFIX)cd minilibx-linux && make fclean
+
 clean:
 	$(PREFIX)rm -f $(OBJS) 
 
