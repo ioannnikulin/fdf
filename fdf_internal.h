@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:43:40 by inikulin          #+#    #+#             */
-/*   Updated: 2024/03/30 17:11:46 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/03/30 22:09:40 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,13 +18,15 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <mlx.h>
+# define WIN_WIDTH 1024
+# define WIN_HEIGHT 512
 
-typedef struct	s_img
+typedef struct	s_map
 {
-	int	**map;
-	int	mheight;
-	int	mwidth;
-}	t_img;
+	int	*vals;
+	int	height;
+	int	width;
+}	t_map;
 
 typedef enum	e_action
 {
@@ -32,12 +34,24 @@ typedef enum	e_action
 	EXIT
 }	t_action;
 
+typedef struct	s_point
+{
+	int	x;
+	int	y;
+	int	z;
+}	t_point;
+
+typedef struct	s_line
+{
+	t_point	*f;
+	t_point	*t;
+}	t_line;
+
 typedef struct	s_screen
 {
 	void	*mlx;
 	void	*win;
-	t_img	*img;
-
+	t_map	*map;
 }	t_screen;
 
 #endif

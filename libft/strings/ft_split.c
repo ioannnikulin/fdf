@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 20:24:25 by inikulin          #+#    #+#             */
-/*   Updated: 2023/11/23 13:53:37 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/03/30 21:34:33 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,15 +81,14 @@ static int	check_edges(char **res, int *cwi)
 	return (0);
 }
 
-char	**ft_split_set(const char *str, const char *charset)
+char	**ft_split_set(const char *str, const char *charset, int *sz)
 {
 	char	**res;
 	int		word_qtty;
 	int		cwi;
 
 	word_qtty = count_words(str, charset);
-	res = (char **) malloc((word_qtty + 1) * sizeof(char *));
-	if (res == 0)
+	if(!(res = (char **) malloc((word_qtty + 1) * sizeof(char *))))
 		return (0);
 	res[word_qtty] = 0;
 	if (word_qtty == 0)
@@ -102,14 +101,16 @@ char	**ft_split_set(const char *str, const char *charset)
 			return (0);
 		cwi ++;
 	}
+	if (sz)
+		*sz = word_qtty;
 	return (res);
 }
 
-char	**ft_split(const char *str, char c)
+char	**ft_split(const char *str, char c, int *sz)
 {
 	char	cc[2];
 
 	cc[0] = c;
 	cc[1] = 0;
-	return (ft_split_set(str, cc));
+	return (ft_split_set(str, cc, sz));
 }
