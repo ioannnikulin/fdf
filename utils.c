@@ -1,31 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   utils.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 16:39:15 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:44:56 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_internal.h"
 
-void	parse_map_from_file(int fs, t_screen *s);
-void	display_it(t_screen *s);
-
-int	main(int argc, char **argv)
+int	finalize(t_screen *s, char *err)
 {
-	int			fs;
-	t_screen	s;
+	if (err)
+		ft_printf("Error: %s\n", err);
+	if (s)
+	{
+		if (s->mlx && s->win)
+			mlx_destroy_window(s->mlx, s->win);
+		if (s->map)
+			free(s->map->vals);
+	}
+	exit (0);
+	return (0);
+}
 
-	if (argc != 2)
-		return (finalize(0, "incorrect number of arguments"));
-	fs = open(argv[1], O_RDONLY);
-	if ((fs == -1) || (read(fs, 0, 0) == -1))
-		return (finalize(0, "file not found"));
-	parse_map_from_file(fs, &s);
-	display_it(&s);
-	return (finalize(&s, 0));
+char	*free_arr_s(char **ws, int len, char *ret)
+{
+	while (len --)
+		free(ws[len]);
+	free(ws);
+	return (ret);
+}
+
+char	*free_arr_i(int *i, char *ret)
+{
+	free(i);
+	return (ret);
 }

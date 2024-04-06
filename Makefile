@@ -11,13 +11,19 @@ all: $(NAME)
 pre: 
 	$(PREFIX)cd libft && make all && cd ../minilibx-linux && make all
 
-SRCS = main.c
+SRCS = utils.c controls.c map_reading.c draw.c
 OBJS = $(SRCS:.c=.o)
 
-$(NAME): $(OBJS)
-	$(PREFIX)$(CC) $< -o $@ $(LINK_LIBFT_FLAGS) $(LINK_MINILIBX_FLAGS)
+ENDPOINT_SRCS = main.c
+ENDPOINT_OBJS = $(ENDPOINT_SRCS:.c=.o)
+
+$(NAME): $(OBJS) $(ENDPOINT_OBJS)
+	$(PREFIX)$(CC) $^ -o $@ $(LINK_LIBFT_FLAGS) $(LINK_MINILIBX_FLAGS)
 
 $(OBJS): %.o: %.c
+	$(PREFIX)$(CC) $(COMPILE_FLAGS) $< -o $@ -g $(INCLUDES) -c
+
+$(ENDPOINT_OBJS): %.o: %.c
 	$(PREFIX)$(CC) $(COMPILE_FLAGS) $< -o $@ -g $(INCLUDES) -c
 
 preclean:
@@ -29,7 +35,7 @@ prefclean:
 	$(PREFIX)cd minilibx-linux && make fclean
 
 clean:
-	$(PREFIX)rm -f $(OBJS) 
+	$(PREFIX)rm -f $(OBJS) $(ENDPOINT_OBJS)
 
 fclean: clean
 	$(PREFIX)rm -f $(NAME)

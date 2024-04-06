@@ -1,31 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   draw.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 16:39:15 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:38:18 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_internal.h"
 
-void	parse_map_from_file(int fs, t_screen *s);
-void	display_it(t_screen *s);
-
-int	main(int argc, char **argv)
+void	draw(t_screen *s)
 {
-	int			fs;
-	t_screen	s;
+	int		r;
+	int		c;
+	char	*buf;
 
-	if (argc != 2)
-		return (finalize(0, "incorrect number of arguments"));
-	fs = open(argv[1], O_RDONLY);
-	if ((fs == -1) || (read(fs, 0, 0) == -1))
-		return (finalize(0, "file not found"));
-	parse_map_from_file(fs, &s);
-	display_it(&s);
-	return (finalize(&s, 0));
+	r = -1;
+	while (++ r < s->map->height)
+	{
+		c = -1;
+		while (++ c < s->map->width)
+		{
+			buf = ft_itoa(s->map->vals[r * s->map->width + c]);
+			mlx_string_put(s->mlx, s->win, 50 + 50 * c, 
+				50 + 50 * r, WHITE, buf);
+			free(buf);
+		}
+	}
 }
