@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 15:29:59 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/06 16:06:45 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static int	handle_mouse(int button, int x, int y, void *param)
 	return (0);
 }
 
-void	draw(t_screen *s)
+static void	draw(t_screen *s)
 {
 	int		r;
 	int		c;
@@ -130,7 +130,7 @@ static void	parse_line(char *buf, t_screen *s)
 	int		ok;
 
 	tmp = s->map->vals;
-	if (!(ws = ft_split(buf, '\t', &act_len)))
+	if (!(ws = ft_split_set(buf, "\t\n ", &act_len)))
 		finalize(s, "no memory for the map");
 	if (s->map->width && s->map->width != act_len)
 		finalize(s, free_arr_s(ws, act_len, "map should be rectangular"));
@@ -159,6 +159,8 @@ static void	parse_map_from_file(int fs, t_screen *s)
 	s->map->vals = 0;
 	s->map->height = 0;
 	s->map->width = 0;
+	s->mlx = 0;
+	s->win = 0;
 	if (!(buf = get_next_line(fs)))
 		finalize(s, "file empty");
 	parse_line(buf, s);
