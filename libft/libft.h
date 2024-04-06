@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:16:17 by inikulin          #+#    #+#             */
-/*   Updated: 2024/03/24 18:20:50 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/06 14:51:24 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,14 @@ char	*ft_strdup(char *s);
 char	*ft_substr(const char *s, unsigned int start, size_t len);
 char	*ft_strjoin(const char *s1, const char *s2);
 char	*ft_strtrim(const char *s1, const char *set);
-char	**ft_split_set(const char *s, const char *charset);
-char	**ft_split(const char *s, char delim);
+char	**ft_split_set(const char *s, const char *charset, int *sz);
+char	**ft_split(const char *s, char delim, int *sz);
 char	*ft_strmapi(const char *s, char (*f)(unsigned int, char));
 void	ft_striteri(char *s, void (*f)(unsigned int, char *));
 int		ft_is_in(const char c, const char *set);
 char	*ft_empty_string(void);
 // -------- numbers <> strings --------
-int		ft_atoi(const char *nptr);
+int		ft_atoi(const char *nptr, int *ok);
 char	*ft_itoa(int v);
 size_t	ft_lltoa_base(long long nbr, char *base, char *buf);
 size_t	ft_ulltoa_base(unsigned long long nbr, char *base, char *buf);

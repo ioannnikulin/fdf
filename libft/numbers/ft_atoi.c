@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/13 19:01:40 by inikulin          #+#    #+#             */
-/*   Updated: 2024/03/30 22:25:00 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/06 15:04:09 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,9 @@ static char	sign(const char *nptr, size_t *cur)
 	{
 		if (nptr[*cur] == '-')
 			res *= -1;
-		*cur ++;
+		(*cur) ++;
 	}
-	if (!ft_isdigit(nptr[cur]))
+	if (!ft_isdigit(nptr[*cur]))
 		return (0);
 	return (res);
 }
@@ -40,18 +40,18 @@ static int	ret(int what, int *ok, int okv)
 int	ft_atoi(const char *nptr, int *ok)
 {
 	long	res;
-	char	sign;
+	char	sgn;
 	size_t	cur;
 
 	res = 0;
 	cur = 0;
-	if (!(sign = sign(nptr, &cur)))
+	if (!(sgn = sign(nptr, &cur)))
 		return(ret(0, ok, 0));
 	while (nptr[cur] && ft_isdigit(nptr[cur]))
 	{
 		res = res * 10 + nptr[cur ++] - '0';
-		if ((sign == 1 && res > INT_MAX) || -res < INT_MIN)
+		if ((sgn == 1 && res > INT_MAX) || -res < INT_MIN)
 			return (ret(0, ok, 0));
 	}
-	return (ret((int)(sign * res), ok, 1));
+	return (ret((int)(sgn * res), ok, 1));
 }

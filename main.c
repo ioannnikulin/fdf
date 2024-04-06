@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/03/30 22:42:24 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/06 15:29:59 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,12 @@ static int	finalize(t_screen *s, char *err)
 			free(s->map->vals);
 	}
 	exit(0);
+	return (0);
+}
+
+static int	closeit(void *param)
+{
+	finalize((t_screen *)param, 0);
 	return (0);
 }
 
@@ -70,15 +76,35 @@ static int	handle_mouse(int button, int x, int y, void *param)
 	return (0);
 }
 
+void	draw(t_screen *s)
+{
+	int		r;
+	int		c;
+	char	*buf;
+
+	r = -1;
+	while (++ r < s->map->height)
+	{
+		c = -1;
+		while (++ c < s->map->width)
+		{
+			buf = ft_itoa(s->map->vals[r * s->map->width + c]);
+			mlx_string_put(s->mlx, s->win, 50 + 50 * c, 50 + 50 * r, 255 + 256 * 255 + 256 * 256 * 255, buf);
+			free(buf);
+		}
+	}
+}
+
 static void	video(t_screen *s)
 {
 	if(!(s->mlx = mlx_init()))
 		finalize(s, "couldn't establish connection to the X server");
 	if(!(s->win = mlx_new_window(s->mlx, WIN_WIDTH, WIN_HEIGHT, "FdF")))
 		finalize(s, "couldn't create a MLX window");
+	draw(s);
 	mlx_key_hook(s->win, handle_keyboard, s);
 	mlx_mouse_hook(s->win, handle_mouse, s);
-	mlx_hook(s->win, 17, 0, finalize, s);
+	mlx_hook(s->win, 17, 0, closeit, s);
 	mlx_loop(s->mlx);
 }
 
@@ -86,50 +112,58 @@ static char	*free_arr_s(char **ws, int len, char *ret)
 {
 	while (len --)
 		free(ws[len]);
-	free(*ws);
+	free(ws);
 	return (ret);
 }
 
 static char	*free_arr_i(int *i, char *ret)
 {
-	free(*i);
+	free(i);
 	return (ret);
 }
 
-static int	parse_line(char *buf, t_map *map, int exp_len)
+static void	parse_line(char *buf, t_screen *s)
 {
 	int		*tmp;
 	char	**ws;
 	int		act_len;
 	int		ok;
 
-	tmp = map->vals;
-	if (!(ws = ft_split(buf, ' ', &act_len)))
+	tmp = s->map->vals;
+	if (!(ws = ft_split(buf, '\t', &act_len)))
 		finalize(s, "no memory for the map");
-	if (exp_len && exp_len != act_len)
+	if (s->map->width && s->map->width != act_len)
 		finalize(s, free_arr_s(ws, act_len, "map should be rectangular"));
-	if (!(map->vals = malloc(sizeof(int) * (map->width * (map->height + 1)))))
+	if (!s->map->width)
+		s->map->width = act_len;
+	if (!(s->map->vals = malloc(sizeof(int) * (s->map->width * (s->map->height + 1)))))
 		finalize(s, free_arr_s(ws, act_len, "no memory for the map"));
 	while (act_len -- > 0)
 	{
-		vals[map->height * map->width + act_len] = ft_atoi(ws[act_len], &ok);
+		s->map->vals[s->map->height * s->map->width + act_len] = ft_atoi(ws[act_len], &ok);
 		if (!ok)
 			finalize(s, free_arr_s(ws, act_len,
 					free_arr_i(tmp, "unexpected point height")));
 	}
-	map->height ++;
-	free_arr_s(wc, act_len, free_arr_i(tmp, 0));
+	act_len = s->map->height * s->map->width;
+	while (act_len -- > 0)
+		s->map->vals[act_len] = tmp[act_len];
+	s->map->height ++;
+	free_arr_s(ws, s->map->width, free_arr_i(tmp, 0));
 }
 
 static void	parse_map_from_file(int fs, t_screen *s)
 {
 	char	*buf;
-	int		nwidth;
-	int		*tmp;
 
+	s->map->vals = 0;
+	s->map->height = 0;
+	s->map->width = 0;
 	if (!(buf = get_next_line(fs)))
 		finalize(s, "file empty");
-	if (!parse_line()
+	parse_line(buf, s);
+	while ((buf = get_next_line(fs)))
+		parse_line(buf, s);
 }
 
 int	main(int argc, char **argv)

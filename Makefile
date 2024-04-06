@@ -8,7 +8,8 @@ INCLUDES = -Ilibft -Iminilibx-linux
 
 all: $(NAME)
 
-pre: cd libft && make all && cd ../minilibx-linux && make all
+pre: 
+	$(PREFIX)cd libft && make all && cd ../minilibx-linux && make all
 
 SRCS = main.c
 OBJS = $(SRCS:.c=.o)
@@ -30,7 +31,7 @@ prefclean:
 clean:
 	$(PREFIX)rm -f $(OBJS) 
 
-fclean:
+fclean: clean
 	$(PREFIX)rm -f $(NAME)
 
 re: fclean all
