@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:43:40 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 16:33:36 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/06 17:44:39 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,21 @@ typedef struct	s_line
 	t_point	*t;
 }	t_line;
 
+typedef struct s_mlx_img
+{
+	void	*img;
+	char	*data;
+	int		bpp;
+	int		linesz;
+	int		endian;
+}	t_mlx_img;
+
 typedef struct	s_screen
 {
-	void	*mlx;
-	void	*win;
-	t_map	*map;
+	void		*mlx;
+	void		*win;
+	t_map		map;
+	t_mlx_img	img;
 }	t_screen;
 
 char	*free_arr_s(char **ws, int len, char *ret);

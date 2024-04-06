@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 16:46:18 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/06 17:43:23 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,8 @@ void	parse_map_from_file(int fs, t_screen *s)
 	s->map->width = 0;
 	s->mlx = 0;
 	s->win = 0;
+	s->img->img = 0;
+	s->img->data = 0;
 	buf = get_next_line(fs);
 	if (!buf)
 		finalize(s, "file empty");

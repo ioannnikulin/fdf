@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 16:38:18 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/06 17:45:38 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,18 @@ void	draw(t_screen *s)
 {
 	int		r;
 	int		c;
-	char	*buf;
 
+	s->img->img = mlx_new_image(s->mlx, WIN_WIDTH, WIN_HEIGHT);
+	if (!s->img->img)
+		finalize(s, "couldn't create an image");
+	s->img->data = mlx_get_data(s->img->img, &(s->img->bpp),
+		&(s->img->linesz), &(s->img->endian));
 	r = -1;
 	while (++ r < s->map->height)
 	{
 		c = -1;
 		while (++ c < s->map->width)
 		{
-			buf = ft_itoa(s->map->vals[r * s->map->width + c]);
 			mlx_string_put(s->mlx, s->win, 50 + 50 * c, 
 				50 + 50 * r, WHITE, buf);
 			free(buf);
