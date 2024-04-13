@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 16:44:56 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/13 16:19:21 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,7 @@ int	finalize(t_screen *s, char *err)
 	{
 		if (s->mlx && s->win)
 			mlx_destroy_window(s->mlx, s->win);
-		if (s->map)
-			free(s->map->vals);
+		free(s->map.vals);
 	}
 	exit (0);
 	return (0);

@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:43:40 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 17:44:39 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/13 16:20:00 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,20 +20,9 @@
 # include <mlx.h>
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 512
+# define MARGIN 50
+# define STEP 20
 # define WHITE 0xffffff
-
-typedef struct	s_map
-{
-	int	*vals;
-	int	height;
-	int	width;
-}	t_map;
-
-typedef enum	e_action
-{
-	NO,
-	EXIT
-}	t_action;
 
 typedef struct	s_point
 {
@@ -41,6 +30,20 @@ typedef struct	s_point
 	int	y;
 	int	z;
 }	t_point;
+
+typedef struct	s_map
+{
+	int		*vals;
+	int		height;
+	int		width;
+	t_point	**nodes;
+}	t_map;
+
+typedef enum	e_action
+{
+	NO,
+	EXIT
+}	t_action;
 
 typedef struct	s_line
 {
