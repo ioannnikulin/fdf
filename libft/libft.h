@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:16:17 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 14:51:24 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/13 20:01:53 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,7 @@ void	ft_swap_s(char **a, char **b);
 void	ft_swap_l(long *a, long *b);
 void	ft_swap_ll(long long *a, long long *b);
 void	ft_swap_ull(unsigned long long *a, unsigned long long *b);
+void	ft_swap_d(double *a, double *b);
 // -------- lists --------
 typedef struct s_list
 {

@@ -4,6 +4,7 @@ PREFIX =
 COMPILE_FLAGS = -Wall -Wextra -Werror
 LINK_MINILIBX_FLAGS = -lmlx -lXext -lX11 -Lminilibx-linux
 LINK_LIBFT_FLAGS = -lft -Llibft
+LINK_OTHER_FLAGS = -lm
 INCLUDES = -Ilibft -Iminilibx-linux
 
 all: $(NAME)
@@ -11,14 +12,14 @@ all: $(NAME)
 pre: 
 	$(PREFIX)cd libft && make all && cd ../minilibx-linux && make all
 
-SRCS = utils.c controls.c map_reading.c draw.c
+SRCS = utils.c controls.c map_reading.c draw.c transform.c line.c
 OBJS = $(SRCS:.c=.o)
 
 ENDPOINT_SRCS = main.c
 ENDPOINT_OBJS = $(ENDPOINT_SRCS:.c=.o)
 
 $(NAME): $(OBJS) $(ENDPOINT_OBJS)
-	$(PREFIX)$(CC) $^ -o $@ $(LINK_LIBFT_FLAGS) $(LINK_MINILIBX_FLAGS)
+	$(PREFIX)$(CC) $^ -o $@ $(LINK_LIBFT_FLAGS) $(LINK_MINILIBX_FLAGS) $(LINK_OTHER_FLAGS)
 
 $(OBJS): %.o: %.c
 	$(PREFIX)$(CC) $(COMPILE_FLAGS) $< -o $@ -g $(INCLUDES) -c

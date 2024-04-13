@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/13 16:21:17 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/13 16:44:49 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,39 +35,6 @@ static void	copy_old(int *tmp, t_screen *s)
 		s->map.vals[i] = tmp[i];
 }
 
-static char	*free_nodes(t_map *m, int n, char * ret)
-{
-	while (--n > 0)
-		free(m->nodes[n]);
-	free(m->nodes);
-	m->nodes = 0;
-	return (ret);
-}
-
-static void	make_nodes(t_screen *s)
-{
-	int	r;
-	int	c;
-
-	s->map.nodes = malloc(s->map.height * sizeof(t_point *));
-	if (!s->map.nodes)
-		finalize(s, "no memory for nodes");
-	r = -1;
-	while (++r < s->map.height)
-	{
-		s->map.nodes[r] = malloc(s->map.width * sizeof(t_point));
-		if (!s->map.nodes[r])
-			finalize(s, free_nodes(&(s->map), r, "no memory for nodes"));
-		c = -1;
-		while (++c < s->map.width)
-		{
-			s->map.nodes[r][c].x = MARGIN + c * STEP;
-			s->map.nodes[r][c].y = MARGIN + r * STEP;
-			s->map.nodes[r][c].z = s->map.vals[r * s->map.width + c];
-		}
-	}
-}
-
 static void	parse_line(char *buf, t_screen *s)
 {
 	int		*tmp;
@@ -89,7 +56,6 @@ static void	parse_line(char *buf, t_screen *s)
 	copy_old(tmp, s);
 	s->map.height ++;
 	free_arr_s(ws, s->map.width, free_arr_i(tmp, 0));
-	make_nodes(s);
 }
 
 void	parse_map_from_file(int fs, t_screen *s)

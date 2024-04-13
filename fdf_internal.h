@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:43:40 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/13 16:20:00 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/13 19:14:55 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,9 +26,9 @@
 
 typedef struct	s_point
 {
-	int	x;
-	int	y;
-	int	z;
+	double	x;
+	double	y;
+	double	z;
 }	t_point;
 
 typedef struct	s_map
