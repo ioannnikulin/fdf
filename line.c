@@ -6,31 +6,52 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/13 20:20:45 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/21 19:53:06 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_internal.h"
 #include <math.h>
 
+static char	mymax(char a, char b)
+{
+	if ((a < 0 && b > 0) || (a > b && b > 0) || (b < a && a < 0))
+		return (a);
+	return (b);
+}
+
 static void	pixel(t_screen *s, int x, int y, double c)
 {
-	int	tgt;
+	int		tgt;
+	char	ncol;
 
+	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
+		return ;
 	tgt = y * s->img.linesz + x * s->img.bpp / 8;
-	s->img.data[tgt] = 255 * c; // TODO: change to color these later
-	s->img.data[tgt + 1] = 255 * c;
-	s->img.data[tgt + 2] = 255 * c;
+	ncol = 255 * c;
+	s->img.data[tgt] = mymax(s->img.data[tgt], ncol); // TODO: change to color these later
+	s->img.data[tgt + 1] = mymax(s->img.data[tgt + 1], ncol);
+	s->img.data[tgt + 2] = mymax(s->img.data[tgt + 2], ncol);
+}
+
+static double	flr(double c)
+{
+	return ((int)c);
 }
 
 static double	fpart(double c)
 {
-	return (c - floor(c));
+	return (c - flr(c));
 }
 
 static double rfpart(double c)
 {
-	return (1 - fpart(c));
+	return (1.0 - fpart(c));
+}
+
+static double	rnd(double c)
+{
+	return (flr(c + 0.5));
 }
 
 typedef struct	s_line_arg
@@ -69,7 +90,7 @@ static void	prep(t_line_arg *arg)
 	if (arg->dx == 0.0)
 		arg->gradient = 1.0;
 	else
-		arg->gradient = arg->dy / ((double)arg->dx);
+		arg->gradient = arg->dy / arg->dx;
 }
 
 typedef struct	s_endpoint_args
@@ -98,7 +119,7 @@ static void	endpoint(t_line_arg *arg, double x, double y, double *intery)
 {
 	t_endpoint_args	ea;
 
-	ea = make_ea(round(x), y + arg->gradient * (round(x) - x),
+	ea = make_ea(rnd(x), y + arg->gradient * (rnd(x) - x),
 			  rfpart(x + 0.5), &arg->end0x, &arg->end0y);
 	if (!intery)
 	{
@@ -116,7 +137,7 @@ static void	endpoint(t_line_arg *arg, double x, double y, double *intery)
 	else
 	{
 		pixel(arg->s, *(ea.pxx), *(ea.pxy), rfpart(ea.yend) * ea.xgap);
-		pixel(arg->s, *(ea.pxx), *(ea.pxy) + 1, rfpart(ea.yend) * ea.xgap);
+		pixel(arg->s, *(ea.pxx), *(ea.pxy) + 1, fpart(ea.yend) * ea.xgap);
 	}
 	if (intery)
 		*intery = ea.yend + arg->gradient;
@@ -126,13 +147,13 @@ static void	loop(t_line_arg *arg)
 {
 	int	x;
 
-	x = arg->end0x;
+	x = arg->end0x + 1;
 	if (arg->steep)
 	{
 		while (x < arg->end1x)
 		{
-			pixel(arg->s, floor(arg->intery), x, rfpart(arg->intery));
-			pixel(arg->s, floor(arg->intery) + 1, x, fpart(arg->intery));
+			pixel(arg->s, flr(arg->intery), x, rfpart(arg->intery));
+			pixel(arg->s, flr(arg->intery) + 1, x, fpart(arg->intery));
 			arg->intery += arg->gradient;
 			x ++;
 		}
@@ -141,8 +162,8 @@ static void	loop(t_line_arg *arg)
 	{
 		while (x < arg->end1x)
 		{
-			pixel(arg->s, x, floor(arg->intery), rfpart(arg->intery));
-			pixel(arg->s, x, floor(arg->intery) + 1, fpart(arg->intery));
+			pixel(arg->s, x, flr(arg->intery), rfpart(arg->intery));
+			pixel(arg->s, x, flr(arg->intery) + 1, fpart(arg->intery));
 			arg->intery += arg->gradient;
 			x ++;
 		}
@@ -178,5 +199,8 @@ void	line(t_screen *s, double x0, double y0, double x1, double y1)
 	prep(&arg);
 	endpoint(&arg, arg.x0, arg.y0, &(arg.intery));
 	endpoint(&arg, arg.x1, arg.y1, 0);
+	// pixel(s, rnd(x0), rnd(y0), 1);
+	// pixel(s, rnd(x1), rnd(y1), 1);
 	loop(&arg);
+	ft_printf("%i:%i-%i:%i\n", arg.end0x, arg.end0y, arg.end1x, arg.end1y);
 }

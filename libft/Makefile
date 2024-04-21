@@ -1,7 +1,7 @@
 CC = cc
 NAME = libft.a
 CFLAGS = -Wall -Wextra -Werror
-FTPREFIX = 
+FTPREFIX = @
 
 LIST_F = lists
 LIST_NAMES = ft_list_add_back.c ft_list_add_front.c ft_list_clear.c ft_list_delone.c ft_list_iter.c ft_list_generate.c ft_list_last.c ft_list_new.c ft_list_size.c ft_list_map.c
@@ -16,7 +16,7 @@ MEM_NAMES = ft_bzero.c ft_calloc.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmov
 MEM_SRCS = $(addprefix $(MEM_F)/, $(MEM_NAMES))
 
 NUM_F = numbers
-NUM_NAMES = ft_atoi.c ft_itoa.c ft_xtoa_base.c ft_minmax_int.c
+NUM_NAMES = ft_atoi.c ft_itoa.c ft_xtoa_base.c ft_minmax_int.c ft_minmax_double.c ft_minmax_char.c ft_minmax_uchar.c
 NUM_SRCS = $(addprefix $(NUM_F)/, $(NUM_NAMES))
 
 STR_F = strings

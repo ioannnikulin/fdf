@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/14 15:16:17 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/13 20:01:53 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/21 19:41:32 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,18 @@ int		*ft_min_int(int *a, int *b);
 int		*ft_max_int(int *a, int *b);
 int		*ft_min_int_va(int sz, ...);
 int		*ft_max_int_va(int sz, ...);
+double		*ft_min_dbl(double *a, double *b);
+double		*ft_max_dbl(double *a, double *b);
+double		*ft_min_dbl_va(int sz, ...);
+double		*ft_max_dbl_va(int sz, ...);
+char		*ft_min_c(char *a, char *b);
+char		*ft_max_c(char *a, char *b);
+char		*ft_min_c_va(int sz, ...);
+char		*ft_max_c_va(int sz, ...);
+unsigned char		*ft_min_uc(unsigned char *a, unsigned char *b);
+unsigned char		*ft_max_uc(unsigned char *a, unsigned char *b);
+unsigned char		*ft_min_uc_va(int sz, ...);
+unsigned char		*ft_max_uc_va(int sz, ...);
 // -------- memory --------
 void	*ft_memchr(const void *s, int c, size_t n);
 void	*ft_memset(void *s, int c, size_t n);

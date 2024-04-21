@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:43:40 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/13 19:14:55 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/21 19:32:42 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,13 @@
 # define WIN_WIDTH 1024
 # define WIN_HEIGHT 512
 # define MARGIN 50
-# define STEP 20
+# define STEP 50
 # define WHITE 0xffffff
+# define _USE_MATH_DEFINES
+
+
+
+#include <stdio.h>
 
 typedef struct	s_point
 {
