@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 16:39:56 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/21 18:28:13 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/21 20:37:07 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ static void	make_nodes(t_screen *s)
 		{
 			s->map.nodes[r][c].x = MARGIN + c * STEP;
 			s->map.nodes[r][c].y = MARGIN + r * STEP;
-			s->map.nodes[r][c].z = s->map.vals[r * s->map.width + c];
+			s->map.nodes[r][c].z = s->map.vals[r * s->map.width + c] * STEP;
 		}
 	}
 	for (int i = 0; i < s->map.height; i ++)
@@ -82,6 +82,17 @@ static void	pad(t_screen *s, double xpad, double ypad)
 	}
 }
 
+static void	isometric(t_point *p)
+{
+	int	x;
+	int	y;
+
+	x = p->x;
+	y = p->y;
+	p->x = (x - y) * cos(0.46373398);
+	p->y = -p->z + (x + y) * sin(0.46373398);
+}
+
 void	transform(t_screen *s)
 {
 	int		r;
@@ -98,7 +109,10 @@ void	transform(t_screen *s)
 		c = -1;
 		while (++ c < s->map.width)
 		{
-			rotate_z(&s->map.nodes[r][c], M_PI / 3.0);
+			if (0)
+				rotate_z(&s->map.nodes[r][c], M_PI / 4.0);
+			if (1)
+				isometric(&s->map.nodes[r][c]);
 			xmin = *ft_min_dbl(&xmin, &s->map.nodes[r][c].x);
 			ymin = *ft_min_dbl(&ymin, &s->map.nodes[r][c].y);
 		}
