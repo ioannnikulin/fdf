@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/04/13 16:39:56 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/21 20:37:07 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/28 20:42:33 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,26 @@ static char	*free_nodes(t_map *m, int n, char * ret)
 	free(m->nodes);
 	m->nodes = 0;
 	return (ret);
+}
+
+static void	limits_init(t_screen *s, t_point *p)
+{
+	s->map.xmin = p->x;
+	s->map.xmax = p->x;
+	s->map.ymin = p->y;
+	s->map.ymax = p->y;
+	s->map.zmin = p->z;
+	s->map.zmax = p->z;
+}
+
+static void	limits_adjust(t_screen *s, t_point *p)
+{
+	s->map.xmin = *ft_min_dbl(&s->map.xmin, &p->x);
+	s->map.xmax = *ft_max_dbl(&s->map.xmax, &p->x);
+	s->map.ymin = *ft_min_dbl(&s->map.ymin, &p->y);
+	s->map.ymax = *ft_max_dbl(&s->map.ymax, &p->y);
+	s->map.zmin = *ft_min_dbl(&s->map.zmin, &p->z);
+	s->map.zmax = *ft_max_dbl(&s->map.zmax, &p->z);
 }
 
 static void	make_nodes(t_screen *s)
@@ -44,14 +64,9 @@ static void	make_nodes(t_screen *s)
 			s->map.nodes[r][c].z = s->map.vals[r * s->map.width + c] * STEP;
 		}
 	}
-	for (int i = 0; i < s->map.height; i ++)
-	{
-		for (int j = 0; j < s->map.width; j ++)
-			printf("%3.3f:%3.3f:%3.3f\t", s->map.nodes[i][j].x, s->map.nodes[i][j].y, s->map.nodes[i][j].z);
-		printf("\n");
-	}
+	limits_init(s, &s->map.nodes[0][0]);
 }
-
+/*
 static void	rotate_z(t_point *p, double angle)
 {
 	double	x;
@@ -63,12 +78,13 @@ static void	rotate_z(t_point *p, double angle)
 	y = p->y;
 	p->x = x * cos(angle) - y * sin(angle);
 	p->y = x * sin(angle) + y * cos(angle);
-}
+}*/
 
 static void	pad(t_screen *s, double xpad, double ypad)
 {
 	int		r;
 	int		c;
+	double	*z;
 
 	r = -1;
 	while (++ r < s->map.height)
@@ -78,6 +94,7 @@ static void	pad(t_screen *s, double xpad, double ypad)
 		{
 			s->map.nodes[r][c].x += xpad;
 			s->map.nodes[r][c].y += ypad;
+			z = &s->map.nodes[r][c].z;
 		}
 	}
 }
@@ -93,29 +110,37 @@ static void	isometric(t_point *p)
 	p->y = -p->z + (x + y) * sin(0.46373398);
 }
 
+static void	endian_paddings(t_screen *s)
+{
+	s->img.rd = 2;
+	s->img.gd = 1;
+	s->img.bd = 0;
+	if (s->img.endian)
+	{
+		s->img.rd = 0;
+		s->img.gd = 1;
+		s->img.bd = 2;
+	}
+}
+
 void	transform(t_screen *s)
 {
 	int		r;
 	int		c;
-	double	xmin;
-	double	ymin;
 
+	endian_paddings(s);
 	make_nodes(s);
-	xmin = s->map.nodes[0][0].x;
-	ymin = s->map.nodes[0][0].y;
 	r = -1;
 	while (++ r < s->map.height)
 	{
 		c = -1;
 		while (++ c < s->map.width)
 		{
-			if (0)
-				rotate_z(&s->map.nodes[r][c], M_PI / 4.0);
-			if (1)
-				isometric(&s->map.nodes[r][c]);
-			xmin = *ft_min_dbl(&xmin, &s->map.nodes[r][c].x);
-			ymin = *ft_min_dbl(&ymin, &s->map.nodes[r][c].y);
+			isometric(&s->map.nodes[r][c]);
+			limits_adjust(s, &s->map.nodes[r][c]);
 		}
 	}
-	pad(s, -xmin + MARGIN, -ymin + MARGIN);
+	if (s->map.zmax == s->map.zmin)
+		s->map.zmax ++;
+	pad(s, -s->map.xmin + MARGIN, -s->map.ymin + MARGIN);
 }

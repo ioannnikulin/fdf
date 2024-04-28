@@ -12,7 +12,7 @@ DLIST_NAMES = ft_dlist_add_back.c ft_dlist_add_front.c ft_dlist_clear.c ft_dlist
 DLIST_SRCS = $(addprefix $(DLIST_F)/, $(DLIST_NAMES))
 
 MEM_F = memory
-MEM_NAMES = ft_bzero.c ft_calloc.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c ft_swap.c
+MEM_NAMES = ft_bzero.c ft_calloc.c ft_memchr.c ft_memcmp.c ft_memcpy.c ft_memmove.c ft_memset.c ft_swap.c ft_swap_1.c
 MEM_SRCS = $(addprefix $(MEM_F)/, $(MEM_NAMES))
 
 NUM_F = numbers

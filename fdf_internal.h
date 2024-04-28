@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:43:40 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/21 19:32:42 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/28 21:12:15 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,10 @@
 # include <unistd.h>
 # include <fcntl.h>
 # include <mlx.h>
-# define WIN_WIDTH 1024
-# define WIN_HEIGHT 512
+# define WIN_WIDTH 1500
+# define WIN_HEIGHT 700
 # define MARGIN 50
 # define STEP 50
-# define WHITE 0xffffff
 # define _USE_MATH_DEFINES
 
 
@@ -34,6 +33,7 @@ typedef struct	s_point
 	double	x;
 	double	y;
 	double	z;
+	double	color;
 }	t_point;
 
 typedef struct	s_map
@@ -42,6 +42,12 @@ typedef struct	s_map
 	int		height;
 	int		width;
 	t_point	**nodes;
+	double	xmin;
+	double	xmax;
+	double	ymin;
+	double	ymax;
+	double	zmin;
+	double	zmax;
 }	t_map;
 
 typedef enum	e_action
@@ -63,6 +69,9 @@ typedef struct s_mlx_img
 	int		bpp;
 	int		linesz;
 	int		endian;
+	int		rd;
+	int		gd;
+	int		bd;
 }	t_mlx_img;
 
 typedef struct	s_screen

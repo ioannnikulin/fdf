@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 16:36:51 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/04/28 21:02:11 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,23 +45,23 @@ static int	handle_keyboard(int keycode, void *param)
  * 1 LMB, 2 wheel, 3 RMB, 4 up, 5 down
 */
 
-static int	handle_mouse(int button, int x, int y, void *param)
-{
-	t_screen	*s;
-	char		*buf;
-
-	s = (t_screen *)param;
-	if (button != 1)
-		return (0);
-	buf = ft_itoa(x);
-	mlx_clear_window(s->mlx, s->win);
-	mlx_string_put(s->mlx, s->win, 512, 512, WHITE, buf);
-	free(buf);
-	buf = ft_itoa(y);
-	mlx_string_put(s->mlx, s->win, 550, 512, WHITE, buf);
-	free(buf);
-	return (0);
-}
+// static int	handle_mouse(int button, int x, int y, void *param)
+// {
+// 	t_screen	*s;
+// 	char		*buf;
+//
+// 	s = (t_screen *)param;
+// 	if (button != 1)
+// 		return (0);
+// 	buf = ft_itoa(x);
+// 	mlx_string_put(s->mlx, s->win, 512, 512, 0, "################");
+// 	mlx_string_put(s->mlx, s->win, 512, 512, 0xffffff, buf);
+// 	free(buf);
+// 	buf = ft_itoa(y);
+// 	mlx_string_put(s->mlx, s->win, 550, 512, 0xffffff, buf);
+// 	free(buf);
+// 	return (0);
+// }
 
 void	display_it(t_screen *s)
 {
@@ -73,7 +73,6 @@ void	display_it(t_screen *s)
 		finalize(s, "couldn't create a MLX window");
 	draw(s);
 	mlx_key_hook(s->win, handle_keyboard, s);
-	mlx_mouse_hook(s->win, handle_mouse, s);
 	mlx_hook(s->win, 17, 0, close_it, s);
 	mlx_loop(s->mlx);
 }
