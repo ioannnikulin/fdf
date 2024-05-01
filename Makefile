@@ -11,7 +11,7 @@ all: $(NAME)
 
 pre:
 	$(PREFIX)wget https://github.com/42Paris/minilibx-linux/archive/refs/heads/master.zip
-	$(PREFIX)unzip -f master.zip
+	$(PREFIX)unzip master.zip
 	$(PREFIX)rm -f master.zip
 	$(PREFIX)cd libft && make all && cd ../minilibx-linux-master && make all
 
