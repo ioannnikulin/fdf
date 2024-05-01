@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 14:28:56 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/21 19:31:26 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:02:34 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,8 @@ double	*ft_max_dbl(double *a, double *b)
 
 double	*ft_min_dbl_va(int sz, ...)
 {
-	double		*res;
-	double		*cur;
+	double	*res;
+	double	*cur;
 	va_list	args;
 
 	va_start(args, sz);
@@ -45,8 +45,8 @@ double	*ft_min_dbl_va(int sz, ...)
 
 double	*ft_max_dbl_va(int sz, ...)
 {
-	double		*res;
-	double		*cur;
+	double	*res;
+	double	*cur;
 	va_list	args;
 
 	va_start(args, sz);

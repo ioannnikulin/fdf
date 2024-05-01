@@ -6,106 +6,21 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/05/01 14:21:37 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/05/01 14:50:10 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_internal.h"
 #include <math.h>
 
-static double	flr(double c)
-{
-	return ((int)c);
-}
-
-static double	fpart(double c)
-{
-	return (c - flr(c));
-}
-
-static double rfpart(double c)
-{
-	return (1.0 - fpart(c));
-}
-
-static double	rnd(double c)
-{
-	return (flr(c + 0.5));
-}
-
-typedef struct	s_color
-{
-	char	r;
-	char	g;
-	char	b;
-	double	alpha;
-	double	clr;
-	double	metaz;
-} t_color;
-
-static int	higher(t_color a, t_color b)
-{
-	if (b.r == 0 && b.g == 0 && b.b == 0)
-		return (1);
-	if (a.r == 0 && a.g == 0 && a.b == 0)
-		return (0);
-	if (*ft_max_dbl(&a.clr, &b.clr) == b.clr && *ft_max_dbl(&a.clr, &b.clr) != a.clr)
-		return (1);
-	return (0);
-}
-
-t_color	color(double clr, double alpha)
-{
-	t_color	res;
-
-	res.r = 255 * alpha;
-	res.g = 255 * (1 - clr) * alpha;
-	res.b = res.g;
-	res.clr = clr;
-	res.alpha = alpha;
-	return (res);
-}
-
-static void	pixel(t_screen *s, int x, int y, t_color clr)
-{
-	int		tgt;
-	t_color	cur;
-
-	if (x < 0 || x > WIN_WIDTH || y < 0 || y > WIN_HEIGHT)
-		return ;
-	tgt = y * s->img.linesz + x * s->img.bpp / 8;
-	cur.r = s->img.data[tgt + s->img.rd];
-	cur.g = s->img.data[tgt + s->img.gd];
-	cur.b = s->img.data[tgt + s->img.bd];
-	if (higher(clr, cur))
-	{
-		s->img.data[tgt + s->img.rd] = clr.r;
-		s->img.data[tgt + s->img.gd] = clr.g;
-		s->img.data[tgt + s->img.bd] = clr.b;
-	}
-}
-
-typedef struct	s_line_arg
-{
-	double		x0;
-	double		y0;
-	double		z0;
-	double		clr0;
-	double		x1;
-	double		y1;
-	double		z1;
-	double		clr1;
-	double		steep;
-	double		dx;
-	double		dy;
-	double		gradient;
-	int			end0x;
-	int			end0y;
-	int			end1x;
-	int			end1y;
-	double		intery;
-	t_screen	*s;
-}	t_line_arg;
+void	endpoint0(t_line_arg *arg, double x, double y);
+void	endpoint1(t_line_arg *arg, double x, double y);
+double	flr(double c);
+double	fpart(double c);
+double	rfpart(double c);
+double	rnd(double c);
+void	pixel(t_screen *s, int x, int y, t_color clr);
+t_color	color(double clr, double alpha);
 
 static void	prep(t_line_arg *arg)
 {
@@ -130,110 +45,37 @@ static void	prep(t_line_arg *arg)
 		arg->gradient = arg->dy / arg->dx;
 }
 
-typedef struct	s_endpoint_args
-{
-	double		xend;
-	double		yend;
-	double		xgap;
-	t_color		clr;
-}	t_endpoint_args;
-
-static t_endpoint_args	make_ea(double xend, double yend, double xgap,
-							   t_color clr)
-{
-	t_endpoint_args	r;
-
-	r.xend = xend;
-	r.yend = yend;
-	r.xgap = xgap;
-	r.clr = clr;
-	return (r);
-}
-
-static void	endpoint0(t_line_arg *arg, double x, double y)
-{
-	t_endpoint_args	ea;
-
-	ea = make_ea(rnd(x), y + arg->gradient * (rnd(x) - x),
-			rfpart(x + 0.5), color((arg->z0 - arg->s->map.zmin)
-			/ (arg->s->map.zmax - arg->s->map.zmin), 0));
-	arg->end0x = ea.xend;
-	arg->end0y = floor(ea.yend);
-	if (arg->steep)
-	{
-		ea.clr = color(ea.clr.clr, rfpart(ea.yend) * ea.xgap);
-		pixel(arg->s, arg->end0y, arg->end0x, ea.clr);
-		arg->clr0 = ea.clr.clr;
-		ea.clr = color(ea.clr.clr, fpart(ea.yend) * ea.xgap);
-		pixel(arg->s, arg->end0y + 1, arg->end0x, ea.clr);
-	}
-	else
-	{
-		ea.clr = color(ea.clr.clr, rfpart(ea.yend) * ea.xgap);
-		pixel(arg->s, arg->end0x, arg->end0y, ea.clr);
-		arg->clr0 = ea.clr.clr;
-		ea.clr = color(ea.clr.clr, fpart(ea.yend) * ea.xgap);
-		pixel(arg->s, arg->end0x, arg->end0y + 1, ea.clr);
-	}
-	arg->intery = ea.yend + arg->gradient;
-}
-
-static void	endpoint1(t_line_arg *arg, double x, double y)
-{
-	t_endpoint_args	ea;
-
-	ea = make_ea(rnd(x), y + arg->gradient * (rnd(x) - x),
-			fpart(x + 0.5), color((arg->z1 - arg->s->map.zmin)
-			/ (arg->s->map.zmax - arg->s->map.zmin), 0));
-	arg->end1x = ea.xend;
-	arg->end1y = floor(ea.yend);
-	if (arg->steep)
-	{
-		ea.clr = color(ea.clr.clr, rfpart(ea.yend) * ea.xgap);
-		pixel(arg->s, arg->end1y, arg->end1x, ea.clr);
-		arg->clr1 = ea.clr.clr;
-		ea.clr = color(ea.clr.clr, fpart(ea.yend) * ea.xgap);
-		pixel(arg->s, arg->end1y + 1, arg->end1x, ea.clr);
-	}
-	else
-	{
-		ea.clr = color(ea.clr.clr, rfpart(ea.yend) * ea.xgap);
-		pixel(arg->s, arg->end1x, arg->end1y, ea.clr);
-		arg->clr1 = ea.clr.clr;
-		ea.clr = color(ea.clr.clr, fpart(ea.yend) * ea.xgap);
-		pixel(arg->s, arg->end1x, arg->end1y + 1, ea.clr);
-	}
-}
-
-static void	loop(t_line_arg *arg)
+static void	loop_steep(t_line_arg *arg)
 {
 	int		x;
 	double	clr;
 
 	x = arg->end0x + 1;
-	if (arg->steep)
+	while (x < arg->end1x)
 	{
-		while (x < arg->end1x)
-		{
-			clr = ((double)(x - arg->end0x)) / (arg->end1x - arg->end0x);
-			clr = clr * (arg->clr1 - arg->clr0) + arg->clr0;
-			pixel(arg->s, flr(arg->intery), x, color(clr, rfpart(arg->intery)));
-			pixel(arg->s, flr(arg->intery) + 1, x, color(clr, fpart(arg->intery)));
-			arg->intery += arg->gradient;
-			x ++;
-		}
+		clr = ((double)(x - arg->end0x)) / (arg->end1x - arg->end0x);
+		clr = clr * (arg->clr1 - arg->clr0) + arg->clr0;
+		pixel(arg->s, flr(arg->intery), x, color(clr, rfpart(arg->intery)));
+		pixel(arg->s, flr(arg->intery) + 1, x, color(clr, fpart(arg->intery)));
+		arg->intery += arg->gradient;
+		x ++;
 	}
-	else
+}
+
+static void	loop_nonsteep(t_line_arg *arg)
+{
+	int		x;
+	double	clr;
+
+	x = arg->end0x + 1;
+	while (x < arg->end1x)
 	{
-		while (x < arg->end1x)
-		{
-			clr = ((double)(x - arg->end0x)) / (arg->end1x - arg->end0x);
-			clr = clr * (arg->clr1 - arg->clr0) + arg->clr0;
-			pixel(arg->s, x, flr(arg->intery), color(clr, rfpart(arg->intery)));
-			pixel(arg->s, x, flr(arg->intery) + 1, color(clr, fpart(arg->intery)));
-			arg->intery += arg->gradient;
-			x ++;
-		}
+		clr = ((double)(x - arg->end0x)) / (arg->end1x - arg->end0x);
+		clr = clr * (arg->clr1 - arg->clr0) + arg->clr0;
+		pixel(arg->s, x, flr(arg->intery), color(clr, rfpart(arg->intery)));
+		pixel(arg->s, x, flr(arg->intery) + 1, color(clr, fpart(arg->intery)));
+		arg->intery += arg->gradient;
+		x ++;
 	}
 }
 
@@ -268,5 +110,8 @@ void	line(t_screen *s, t_point *f, t_point *t)
 	prep(&arg);
 	endpoint0(&arg, arg.x0, arg.y0);
 	endpoint1(&arg, arg.x1, arg.y1);
-	loop(&arg);
+	if (arg.steep)
+		loop_steep(&arg);
+	else
+		loop_nonsteep(&arg);
 }

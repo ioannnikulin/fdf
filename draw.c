@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/28 20:20:58 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/05/01 14:46:59 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	draw(t_screen *s)
 	if (!s->img.img)
 		finalize(s, "couldn't create an image");
 	s->img.data = mlx_get_data_addr(s->img.img, &(s->img.bpp),
-		&(s->img.linesz), &(s->img.endian));
+			&(s->img.linesz), &(s->img.endian));
 	transform(s);
 	r = -1;
 	while (++ r < s->map.height - 1)

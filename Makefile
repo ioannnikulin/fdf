@@ -12,7 +12,7 @@ all: $(NAME)
 pre: 
 	$(PREFIX)cd libft && make all && cd ../minilibx-linux && make all
 
-SRCS = utils.c controls.c map_reading.c draw.c transform.c line.c
+SRCS = utils.c controls.c map_reading.c draw.c transform.c map_limits.c line.c line_math.c line_endpoint.c line_pixel.c
 OBJS = $(SRCS:.c=.o)
 
 ENDPOINT_SRCS = main.c

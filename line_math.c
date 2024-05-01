@@ -1,20 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_memset_segfault_1.c                             :+:      :+:    :+:   */
+/*   line_math.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: inikulin <inikulin@student.42berlin.d      +#+  +:+       +#+        */
+/*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/11/14 15:56:03 by inikulin          #+#    #+#             */
-/*   Updated: 2023/11/17 14:20:44 by inikulin         ###   ########.fr       */
+/*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
+/*   Updated: 2024/05/01 14:41:40 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "tests.h"
+#include "fdf_internal.h"
+#include <math.h>
 
-int	main(void)
+double	flr(double c)
 {
-	char *s = 0;
-	ft_memset(s, 1, (1));
-	return (segfault_expected(1));
+	return ((int)c);
+}
+
+double	fpart(double c)
+{
+	return (c - flr(c));
+}
+
+double	rfpart(double c)
+{
+	return (1.0 - fpart(c));
+}
+
+double	rnd(double c)
+{
+	return (flr(c + 0.5));
 }

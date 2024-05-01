@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.d      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/08/07 20:24:25 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/06 15:00:13 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:00:49 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,8 @@ char	**ft_split_set(const char *str, const char *charset, int *sz)
 	word_qtty = count_words(str, charset);
 	if (sz)
 		*sz = -1;
-	if(!(res = (char **) malloc((word_qtty + 1) * sizeof(char *))))
+	res = (char **) malloc((word_qtty + 1) * sizeof(char *));
+	if (!res)
 		return (0);
 	res[word_qtty] = 0;
 	if (word_qtty == 0)

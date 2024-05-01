@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/10 14:28:56 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/21 19:40:59 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/05/01 15:02:47 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ unsigned char	*ft_min_uc_va(int sz, ...)
 {
 	unsigned char	*res;
 	unsigned char	*cur;
-	va_list	args;
+	va_list			args;
 
 	va_start(args, sz);
 	res = va_arg(args, unsigned char *);
@@ -47,7 +47,7 @@ unsigned char	*ft_max_uc_va(int sz, ...)
 {
 	unsigned char	*res;
 	unsigned char	*cur;
-	va_list	args;
+	va_list			args;
 
 	va_start(args, sz);
 	res = va_arg(args, unsigned char *);
