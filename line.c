@@ -6,26 +6,12 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/28 21:05:44 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/05/01 14:21:37 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_internal.h"
 #include <math.h>
-
-static char	mymax(char a, char b)
-{
-	if ((a < 0 && b >= 0) || (a > b && b > 0) || (b < a && a < 0))
-		return (a);
-	return (b);
-}
-/*
-static char	mymin(char a, char b)
-{
-	if (mymax(a, b) == a)
-		return (b);
-	return (a);
-}*/
 
 static double	flr(double c)
 {
@@ -54,6 +40,7 @@ typedef struct	s_color
 	char	b;
 	double	alpha;
 	double	clr;
+	double	metaz;
 } t_color;
 
 static int	higher(t_color a, t_color b)
@@ -62,7 +49,7 @@ static int	higher(t_color a, t_color b)
 		return (1);
 	if (a.r == 0 && a.g == 0 && a.b == 0)
 		return (0);
-	if (mymax(a.g, b.g) == b.g && mymax(a.g, b.g) != a.g)
+	if (*ft_max_dbl(&a.clr, &b.clr) == b.clr && *ft_max_dbl(&a.clr, &b.clr) != a.clr)
 		return (1);
 	return (0);
 }

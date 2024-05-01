@@ -6,7 +6,7 @@
 /*   By: inikulin <inikulin@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/24 19:23:13 by inikulin          #+#    #+#             */
-/*   Updated: 2024/04/13 16:44:49 by inikulin         ###   ########.fr       */
+/*   Updated: 2024/05/01 14:26:04 by inikulin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,15 @@
 static void	copy_new(int act_len, t_screen *s, char **ws, int *tmp)
 {
 	int	ok;
+	int	orig_len;
 
+	orig_len = act_len;
 	while (act_len -- > 0)
 	{
 		s->map.vals[s->map.height * s->map.width + act_len]
 			= ft_atoi(ws[act_len], &ok);
 		if (!ok)
-			finalize(s, free_arr_s(ws, act_len,
+			finalize(s, free_arr_s(ws, orig_len,
 					free_arr_i(tmp, "unexpected point height")));
 	}
 }
@@ -43,6 +45,7 @@ static void	parse_line(char *buf, t_screen *s)
 
 	tmp = s->map.vals;
 	ws = ft_split_set(buf, "\t\n ", &act_len);
+	free(buf);
 	if (!ws)
 		finalize(s, "no memory for the map");
 	if (s->map.width && s->map.width != act_len)
