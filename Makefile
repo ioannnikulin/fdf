@@ -33,12 +33,12 @@ preclean:
 
 prefclean:
 	$(PREFIX)cd libft && make fclean
-	$(PREFIX)cd minilibx-linux && make fclean
+	$(PREFIX)cd minilibx-linux && make clean
 
-clean:
+clean: preclean
 	$(PREFIX)rm -f $(OBJS) $(ENDPOINT_OBJS)
 
-fclean: clean
+fclean: clean prefclean
 	$(PREFIX)rm -f $(NAME)
 
 re: fclean all
